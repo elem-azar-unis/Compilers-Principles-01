@@ -1,3 +1,4 @@
+#include "tree.h"
 Node* create_node(Types type)
 {
 	Node* p=(Node*)malloc(sizeof(Node));
@@ -27,6 +28,6 @@ void destroy_tree(Node* head)
 	if(head==NULL)
 		return;
 	for(int i=0;i<head->child_count;i++)
-		destroy_tree(p->child[i]);
+		destroy_tree(head->child[i]);
 	free(head);
 }

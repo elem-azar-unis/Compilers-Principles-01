@@ -5,7 +5,7 @@
 #define _TREE_H_
 #define MAX_LEN_OF_NAME 32+1
 #define MAX_COUNT_OF_CHILD 7
-typedef emun Types
+typedef enum Types
 {
 	/*0 Epsilon*/
 	None,

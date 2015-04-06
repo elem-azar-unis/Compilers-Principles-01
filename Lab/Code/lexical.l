@@ -1,11 +1,7 @@
 %{
-#include "syntax.tab.h"
 #include "tree.h"
-#define YY_USER_ACTION \
-	yylloc.first_line = yylloc.last_line = yylineno; 
-#ifndef YYSTYPE
 #define YYSTYPE Node*
-#endif
+#include "syntax.tab.h"
 int get_value(const char* p);
 %}
 %option yylineno
@@ -44,7 +40,7 @@ id {letter_}({letter_}|{digit})*
 {int} {yylval=create_node(_INT);yylval->line=yylineno;yylval->value_i=get_value(yytext);return INT;}
 {float} {yylval=create_node(_FLOAT);yylval->line=yylineno;yylval->value_f=strtof(yytext,NULL);return FLOAT;}
 {id} {yylval=create_node(_ID);yylval->line=yylineno;strcpy(yylval->name,yytext);return ID;}
-. {printf("Error type A at Line %d: Mysterious character \"%s\"\n",yylineno, yytext);}
+. {printf("Error type A at Line %d: Mysterious character \"%s\"\n",yylineno,yytext);}
 %%
 int get_value(const char* p)
 {
