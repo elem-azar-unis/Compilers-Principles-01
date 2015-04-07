@@ -43,4 +43,6 @@ typedef struct Node
 #endif
 Node* create_node(Types type);
 void destroy_tree(Node* head);
-void add(Node* father,int loc,Node* child);
+void construct(Node* father,int n,...);
+void print_tree(Node* head);
+const char* get_type_name(Types type);

@@ -25,7 +25,7 @@ id {letter_}({letter_}|{digit})*
 "||" {yylval=create_node(_OR);yylval->line=yylineno;return OR;}
 "." {yylval=create_node(_DOT);yylval->line=yylineno;return DOT;}
 "!" {yylval=create_node(_NOT);yylval->line=yylineno;return NOT;}
-"int"|"float" {yylval=create_node(_TYPE);yylval->line=yylineno;return TYPE;}
+"int"|"float" {yylval=create_node(_TYPE);yylval->line=yylineno;strcpy(yylval->name,yytext);return TYPE;}
 "(" {yylval=create_node(_LP);yylval->line=yylineno;return LP;}
 ")" {yylval=create_node(_RP);yylval->line=yylineno;return RP;}
 "[" {yylval=create_node(_LB);yylval->line=yylineno;return LB;}
