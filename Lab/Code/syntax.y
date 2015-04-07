@@ -1,6 +1,5 @@
 %{
 #include "lex.yy.c"
-#define YYDEBUG 1
 #ifndef YYSTYPE
 #define YYSTYPE Node*
 #endif
@@ -66,7 +65,7 @@ ParamDec : Specifier VarDec {$$=create_node(ParamDec);construct($$,2,$1,$2);}
 CompSt : LC DefList StmtList RC {$$=create_node(CompSt);construct($$,4,$1,$2,$3,$4);}
 	;
 StmtList : Stmt StmtList {$$=create_node(StmtList);construct($$,2,$1,$2);}
-	| /* empty */
+	| /* empty */ {$$=create_node(StmtList);construct($$,1,create_node(None));}
 	;
 Stmt : Exp SEMI {$$=create_node(Stmt);construct($$,2,$1,$2);}
 	| CompSt {$$=create_node(Stmt);construct($$,1,$1);}
@@ -125,9 +124,7 @@ int main(int argc,char** argv)
 		return 1;
 	}
 	yyrestart(f);
-	printf("file opened\n");
-	yydebug=1;
-	if(yyparse()==0)
+	if(yyparse()==0 && !error_occured)
 	{
 		printf("complete.\n");
 		print_tree(head);

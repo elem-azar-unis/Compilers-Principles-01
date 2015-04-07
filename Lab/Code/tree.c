@@ -66,10 +66,11 @@ void destroy_tree(Node* head)
 }
 void construct(Node* father,int n,...)
 {
-	Node** p=(Node**)((char*)&n+sizeof(int));
+	va_list ap;
+	va_start(ap,n);
 	father->child_count=n;
 	for(int i=0;i<n;i++)
-		add(father,i,p[i]);
+		add(father,i,va_arg(ap,Node*));
 }
 void print_tree(Node* p)
 {

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 #ifndef _TREE_H_
 #define _TREE_H_
 #define MAX_LEN_OF_NAME 32+1
