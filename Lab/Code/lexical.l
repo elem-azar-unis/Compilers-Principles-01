@@ -3,18 +3,28 @@
 #include <stdbool.h>
 #define YYSTYPE Node*
 #include "syntax.tab.h"
+int yycolumn = 1;
+#define YY_USER_ACTION \
+	yylloc.first_line = yylloc.last_line = yylineno; \
+	yylloc.first_column = yycolumn; \
+	yylloc.last_column = yycolumn + yyleng - 1; \
+	yycolumn += yyleng;
 int get_value(const char* p);
 bool error_occured=false;
 %}
 %option yylineno
-blanks [ \r\t\n]+
+blanks [ \r\t]+
 letter_ [_A-Za-z]
 digit [0-9]
 int [1-9]{digit}*|0[0-7]+|0[Xx][0-9A-Fa-f]+|0
 float {digit}+\.{digit}+
 id {letter_}({letter_}|{digit})*
+illOctInt 0[0-9]+
+illHexInt 0[Xx][0-9A-Za-z]+
+illID {digit}({letter_}|{digit})*
 %%
 {blanks} {}
+\n {yycolumn=1;}
 ";" {yylval=create_node(_SEMI);yylval->line=yylineno;return SEMI;}
 "," {yylval=create_node(_COMMA);yylval->line=yylineno;return COMMA;}
 "=" {yylval=create_node(_ASSIGNOP);yylval->line=yylineno;return ASSIGNOP;}
@@ -42,6 +52,12 @@ id {letter_}({letter_}|{digit})*
 {int} {yylval=create_node(_INT);yylval->line=yylineno;yylval->value_i=get_value(yytext);return INT;}
 {float} {yylval=create_node(_FLOAT);yylval->line=yylineno;yylval->value_f=strtof(yytext,NULL);return FLOAT;}
 {id} {yylval=create_node(_ID);yylval->line=yylineno;strcpy(yylval->name,yytext);return ID;}
+{illHexInt} {printf("Error type A at Line %d: Illegal hexadecimal number \"%s\"\n",yylineno,yytext);
+			error_occured=true;yylval=create_node(None);return INT;}
+{illOctInt} {printf("Error type A at Line %d: Illegal octal number \"%s\"\n",yylineno,yytext);
+			error_occured=true;yylval=create_node(None);return INT;}
+{illID} {printf("Error type A at Line %d: Illegal identifier name \"%s\"\n",yylineno,yytext);
+		error_occured=true;yylval=create_node(None);return ID;}
 . {printf("Error type A at Line %d: Mysterious character \"%s\"\n",yylineno,yytext);error_occured=true;}
 %%
 int get_value(const char* p)
