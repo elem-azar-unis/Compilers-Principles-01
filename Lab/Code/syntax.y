@@ -4,12 +4,9 @@
 #define YYSTYPE Node*
 #endif
 #define YYERROR_VERBOSE 1
-#define USE_MY_ERROR_MESSAGE 1
 Node* head=NULL;
 void m_yyerror(char* msg,int lineno);
-#if USE_MY_ERROR_MESSAGE==0
 char message[100];
-#endif
 %}
 %locations
 /*1 Tokens*/
@@ -183,21 +180,11 @@ int main(int argc,char** argv)
 	fclose(f);
 	return 0;
 }
-#if USE_MY_ERROR_MESSAGE==1
 yyerror(char* msg) {
+strcpy(message,msg+14);
 error_occured=true;
 }
 void m_yyerror(char* msg,int lineno) {
-printf("Error type B at Line %d: %s.\n",lineno,msg);
+printf("Error type B at Line %d: %s, maybe %s.\n",lineno,message,msg);
 error_occured=true;
 }
-#else
-yyerror(char* msg) {
-strcpy(message,msg);
-error_occured=true;
-}
-void m_yyerror(char* msg,int lineno) {
-printf("Error type B at Line %d: %s.\n",lineno,message);
-error_occured=true;
-}
-#endif
